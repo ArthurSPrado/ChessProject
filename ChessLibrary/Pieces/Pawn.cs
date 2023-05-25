@@ -5,14 +5,14 @@ namespace ChessLibrary.Pieces;
 
 public class Pawn : Piece
 {
-    private readonly int _rowIncrement;
+    public readonly int RowIncrement;
     private readonly int _startingRow;
     public bool CanCaptureEnPassant { get; set; } 
     
     public Pawn(PieceColor pieceColor, Coordinate position) : base(pieceColor, position)
     {
         CanCaptureEnPassant = false;
-        _rowIncrement = (Color == PieceColor.White) ? -1 : 1;
+        RowIncrement = (Color == PieceColor.White) ? -1 : 1;
         _startingRow = (Color == PieceColor.White) ? 6 : 1;
     }
 
@@ -33,14 +33,14 @@ public class Pawn : Piece
 
     private void VerifyCaptureMoves(Square[,] boardState)
     {
-        int leftDiagonalRow = Position.Row + _rowIncrement;
+        int leftDiagonalRow = Position.Row + RowIncrement;
         int leftDiagonalCol = Array.IndexOf(_columns,Position.Column) - 1;
         if (IsInRange(leftDiagonalRow, leftDiagonalCol) && boardState[leftDiagonalRow, leftDiagonalCol].Piece != null && boardState[leftDiagonalRow, leftDiagonalCol].Piece.Color != Color)
         {
             PossibleMoves.Add(new Coordinate(leftDiagonalRow, _columns[leftDiagonalCol]));
         }
 
-        int rightDiagonalRow = Position.Row + _rowIncrement;
+        int rightDiagonalRow = Position.Row + RowIncrement;
         int rightDiagonalCol = Array.IndexOf(_columns,Position.Column) + 1;
         if (IsInRange(rightDiagonalRow, rightDiagonalCol) && boardState[rightDiagonalRow, rightDiagonalCol].Piece != null && boardState[rightDiagonalRow, rightDiagonalCol].Piece.Color != Color)
         {
@@ -49,7 +49,7 @@ public class Pawn : Piece
     }
     private void VerifyFowardMoves(Square[,] boardState)
     {
-        int forwardRow = Position.Row + _rowIncrement;
+        int forwardRow = Position.Row + RowIncrement;
         int column = Array.IndexOf(_columns, Position.Column);
         
         if (IsInRange(forwardRow, column) && boardState[forwardRow, column].Piece == null)
@@ -59,11 +59,10 @@ public class Pawn : Piece
             // Verifica o movimento duplo no primeiro movimento do peão
             if (Position.Row == _startingRow)
             {
-                int doubleForwardRow = Position.Row + 2 * _rowIncrement;
+                int doubleForwardRow = Position.Row + 2 * RowIncrement;
                 if (IsInRange(doubleForwardRow, column) && boardState[doubleForwardRow, column].Piece == null)
                 {
                     PossibleMoves.Add(new Coordinate(doubleForwardRow, Position.Column));
-                    CanCaptureEnPassant = true;
                 }
             } 
         }
@@ -74,12 +73,12 @@ public class Pawn : Piece
         
         if (IsInRange(Position.Row, column - 1) && boardState[Position.Row, column - 1].Piece is Pawn leftAdjacentPawn && leftAdjacentPawn.CanCaptureEnPassant)
         {
-            PossibleMoves.Add(new Coordinate(Position.Row + _rowIncrement, _columns[column-1]));
+            PossibleMoves.Add(new Coordinate(Position.Row + RowIncrement, _columns[column-1]));
         }
 
         if (IsInRange(Position.Row, column + 1) && boardState[Position.Row, column + 1].Piece is Pawn rightAdjacentPawn && rightAdjacentPawn.CanCaptureEnPassant)
         {
-            PossibleMoves.Add(new Coordinate(Position.Row + _rowIncrement, _columns[column+1]));
+            PossibleMoves.Add(new Coordinate(Position.Row + RowIncrement, _columns[column+1]));
         }
     }
     private static bool IsInRange(int row, int col)
