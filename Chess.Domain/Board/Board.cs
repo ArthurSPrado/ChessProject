@@ -8,8 +8,6 @@ public class Board
 {
     private Dictionary<Position, ChessPiece?> Squares { get; } = new();
 
-     
-
     private ChessPiece? this[Position position]
     {
         get =>
